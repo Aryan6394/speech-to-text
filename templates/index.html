@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text Converter</title>
+    <style>
+        /* Full-screen background */
+        body {
+            background: url("https://i.pinimg.com/736x/a0/66/6b/a0666b22886130e1896ab961ecf609cc.jpg") no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+        }
+
+        /* Container styling */
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        /* Header styling */
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        /* File input */
+        input[type="file"] {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            color: black;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        /* Button styling */
+        button {
+            background: linear-gradient(45deg, #ff8c00, #ff0080);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ff0080, #ff8c00);
+            transform: scale(1.1);
+        }
+
+        /* Result text */
+        p {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Speech-to-Text Converter</h1>
+        <input type="file" id="audioFile">
+        <button onclick="uploadAudio()">Convert to Text</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        async function uploadAudio() {
+            let file = document.getElementById("audioFile").files[0];
+            if (!file) {
+                alert("Please select an audio file.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("audio", file);
+
+            let response = await fetch("/speech-to-text", {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json();
+            document.getElementById("result").innerText = result.transcription || result.error;
+        }
+    </script>
+</body>
+</html>
